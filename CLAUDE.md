@@ -1,0 +1,1 @@
+Each bug found should have a regression test created that fails, to ensure that the bug does not reoccur in the future.

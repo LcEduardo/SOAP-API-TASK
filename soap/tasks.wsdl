@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Contrato SOAP (document/literal wrapped). Só expõe getTask por enquanto. -->
+<definitions name="TaskService"
+             targetNamespace="urn:TaskService"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="urn:TaskService"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <types>
+        <xsd:schema targetNamespace="urn:TaskService" elementFormDefault="qualified">
+            <xsd:complexType name="Task">
+                <xsd:sequence>
+                    <xsd:element name="id" type="xsd:int"/>
+                    <xsd:element name="title" type="xsd:string"/>
+                    <xsd:element name="description" type="xsd:string" nillable="true"/>
+                    <xsd:element name="status" type="xsd:string"/>
+                    <xsd:element name="created" type="xsd:string" nillable="true"/>
+                    <xsd:element name="modified" type="xsd:string" nillable="true"/>
+                    <xsd:element name="worker" type="xsd:string" nillable="true"/>
+                    <xsd:element name="boss" type="xsd:string" nillable="true"/>
+                </xsd:sequence>
+            </xsd:complexType>
+
+            <xsd:element name="getTask">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="id" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="getTaskResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="task" type="tns:Task"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </types>
+
+    <message name="getTaskRequest">
+        <part name="parameters" element="tns:getTask"/>
+    </message>
+    <message name="getTaskResponse">
+        <part name="parameters" element="tns:getTaskResponse"/>
+    </message>
+
+    <portType name="TaskPortType">
+        <operation name="getTask">
+            <input message="tns:getTaskRequest"/>
+            <output message="tns:getTaskResponse"/>
+        </operation>
+    </portType>
+
+    <binding name="TaskBinding" type="tns:TaskPortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="getTask">
+            <soap:operation soapAction="urn:TaskService#getTask"/>
+            <input><soap:body use="literal"/></input>
+            <output><soap:body use="literal"/></output>
+        </operation>
+    </binding>
+
+    <service name="TaskService">
+        <port name="TaskPort" binding="tns:TaskBinding">
+            <!-- Endereço do endpoint SOAP (POST) -->
+            <soap:address location="http://localhost:8000/soap/server.php"/>
+        </port>
+    </service>
+</definitions>
